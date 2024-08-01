@@ -3,7 +3,7 @@
 CMove::CMove(QWidget *parent)
     : QMainWindow(parent)
 {
-    ui.setupUi(this);
+    this->ui.setupUi(this);
 }
 
 CMove::~CMove()
