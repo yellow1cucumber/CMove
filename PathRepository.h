@@ -16,6 +16,10 @@ public:
 	QString* GetSourcePath() const noexcept;
 	QString* GetDestinationPath() const noexcept;
 
+signals:
+	void onSourcePathChanged(const QString& newPath);
+	void onDestinationPathChanged(const QString& newPath);
+
 private:
 	QString SourcePath{ "" };
 	QString DestinationPath{ "" };
