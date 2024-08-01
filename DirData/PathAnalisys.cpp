@@ -7,18 +7,19 @@ PathAnalisys::PathAnalisys(QObject *parent)
 PathAnalisys::~PathAnalisys()
 {}
 
-quint64 PathAnalisys::FindAllSubDirectories(const QString & path) const
+void PathAnalisys::FindAllSubDirectories(const QString & path)
 {
 	QDir dir{ path };
 	QDirIterator iter{ dir, QDirIterator::Subdirectories };
 	quint64 count{ 0 };
 	while (iter.hasNext()) {
+		this->result.Subdirs.append(iter.next());
 		count++;
 	};
-	return count;
+	this->result.SetFoundSubdirsCount(count);
 }
 
-quint64 PathAnalisys::FindAllFiles(const QString& path) const
+void PathAnalisys::FindAllFiles(const QString& path)
 {
 	QDir dir{ path };
 	QDirIterator iter{ dir.absolutePath(), QDir::Files, QDirIterator::Subdirectories };
@@ -27,10 +28,10 @@ quint64 PathAnalisys::FindAllFiles(const QString& path) const
 	{
 		count++;
 	}
-	return count;
+	this->result.SetFoundFilesCount(count);
 }
 
-quint64 PathAnalisys::FindAllFilesByRegex(const QString& path, const QString& substring) const
+void PathAnalisys::FindAllFilesByRegex(const QString& path, const QString& substring)
 {
 	QDir dir{ path };
 	QDirIterator iter{ dir.absolutePath(), QDir::Files, QDirIterator::Subdirectories };
@@ -39,8 +40,9 @@ quint64 PathAnalisys::FindAllFilesByRegex(const QString& path, const QString& su
 	{
 		auto file = iter.next();
 		if (file.contains(substring)) {
+			this->result.FilesByRegex.append(file);
 			count++;
 		}
 	}
-	return quint64();
+	this->result.SetFilesByRegexCount(count);
 }
