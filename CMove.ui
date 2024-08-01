@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>808</width>
-    <height>524</height>
+    <width>813</width>
+    <height>576</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -136,6 +136,16 @@
          </layout>
         </widget>
        </item>
+       <item>
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>Если присутствует в наименовании:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="FileRegexLineEdit"/>
+       </item>
       </layout>
      </widget>
     </item>
@@ -217,7 +227,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>808</width>
+     <width>813</width>
      <height>21</height>
     </rect>
    </property>
