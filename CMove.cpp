@@ -24,8 +24,6 @@ CMove::CMove(QWidget *parent)
                   this, &CMove::SaveSourcePath);
     this->connect(this->ui.DestinationPathLineEdit, &QLineEdit::textChanged,
                   this, &CMove::SaveDestinationPath);
-
-    this->SetTreeView("C:/", "*tures*");
 }
 
 CMove::~CMove()
