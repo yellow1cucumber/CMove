@@ -24,6 +24,8 @@ CMove::CMove(QWidget *parent)
                   this, &CMove::SaveSourcePath);
     this->connect(this->ui.DestinationPathLineEdit, &QLineEdit::textChanged,
                   this, &CMove::SaveDestinationPath);
+
+    this->SetTreeView("C:/", "*tures*");
 }
 
 CMove::~CMove()
@@ -73,5 +75,16 @@ void CMove::SetSourcePathLineEdit(const QString& path) {
 }
 void CMove::SetDestinationPathLineEdit(const QString& path) {
     this->ui.DestinationPathLineEdit->setText(path);
+}
+
+void CMove::SetTreeView(const QString& path, const QString& filter) {
+    auto model = new QFileSystemModel(this);
+    model->setRootPath("C:/");
+    model->setFilter(QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot);
+    QStringList modelFilter;
+    modelFilter << filter;
+    model->setNameFilters(modelFilter);
+    model->setNameFilterDisables(false);
+    this->ui.FilesTreeView->setModel(model);
 }
 #pragma endregion

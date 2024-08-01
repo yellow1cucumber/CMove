@@ -6,6 +6,9 @@
 #include "qdir.h"
 #include "qfiledialog.h"
 #include "qpushbutton.h"
+#include "qtreeview.h"
+#include "qfilesystemmodel.h"
+#include "qstringlist.h"
 
 #include "PathRepository.h"
 
@@ -32,6 +35,8 @@ public slots:
 
     void SetSourcePathLineEdit(const QString& path);
     void SetDestinationPathLineEdit(const QString& path);
+
+    void SetTreeView(const QString& path, const QString& filter);
 
 private:
     Ui::CMoveClass ui;
