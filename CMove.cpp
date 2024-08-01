@@ -24,6 +24,12 @@ CMove::CMove(QWidget *parent)
                   this, &CMove::SaveSourcePath);
     this->connect(this->ui.DestinationPathLineEdit, &QLineEdit::textChanged,
                   this, &CMove::SaveDestinationPath);
+
+    this->connect(this->ui.RegexLineEdit, &QLineEdit::editingFinished,
+                  this, &CMove::SetFilterExpression);
+
+    this->connect(this, &CMove::onReadyToBuildTreeView,
+                  this, &CMove::SetTreeView);
 }
 
 CMove::~CMove()
@@ -42,7 +48,21 @@ QString CMove::GetDirByFileDialog(const QString& activePath)
 
 bool CMove::isReadyToBuildTreeView()
 {
-    return false;
+    if (this->pathRepository.GetSourcePath().isEmpty() ||
+        this->validator.GetFilterExpression().isEmpty()) 
+    {
+        return false;
+    }
+    return true;
+}
+
+QStringList CMove::prepareFilter(const QString& filterInput)
+{
+    QStringList filter;
+    QString filterExpression{ filterInput };
+    filterExpression = "*" + filterExpression + "*";
+    filter << filterExpression;
+    return filter;
 }
 
 
@@ -68,6 +88,10 @@ void CMove::OpenFileDestinationDialog() {
 
 void CMove::SaveSourcePath(const QString& path) {
     this->pathRepository.SetSourcePath(path);
+    if (isReadyToBuildTreeView()) {
+        emit onReadyToBuildTreeView(this->pathRepository.GetSourcePath(),
+                                    this->validator.GetFilterExpression());
+    }
 }
 void CMove::SaveDestinationPath(const QString& path) {
     this->pathRepository.SetDestinationPath(path);
@@ -75,18 +99,31 @@ void CMove::SaveDestinationPath(const QString& path) {
 
 void CMove::SetSourcePathLineEdit(const QString& path) {
     this->ui.SourcePathLineEdit->setText(path);
+    if (isReadyToBuildTreeView()) {
+        emit onReadyToBuildTreeView(this->pathRepository.GetSourcePath(),
+                                    this->validator.GetFilterExpression());
+    }
 }
 void CMove::SetDestinationPathLineEdit(const QString& path) {
     this->ui.DestinationPathLineEdit->setText(path);
 }
 
-void CMove::SetTreeView(const QString& path, const QString& filter) {
+void CMove::SetFilterExpression()
+{
+    auto filterExpression = this->ui.RegexLineEdit->text();
+    this->validator.SetFilterExpression(filterExpression);
+    if (isReadyToBuildTreeView()) {
+        emit onReadyToBuildTreeView(this->pathRepository.GetSourcePath(), 
+                                    this->validator.GetFilterExpression());
+    }
+}
+
+void CMove::SetTreeView(const QString& path, const QString& filterInput) {
     auto model = new QFileSystemModel(this);
-    model->setRootPath("C:/");
-    model->setFilter(QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot);
-    QStringList modelFilter;
-    modelFilter << filter;
-    model->setNameFilters(modelFilter);
+    model->setRootPath(path + "/");
+    model->setFilter(QDir::Files | QDir::NoDotAndDotDot);
+    auto filter = this->prepareFilter(filterInput);
+    model->setNameFilters(filter);
     model->setNameFilterDisables(false);
     this->ui.FilesTreeView->setModel(model);
 }
