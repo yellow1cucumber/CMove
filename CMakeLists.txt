@@ -24,6 +24,9 @@ set(PROJECT_SOURCES
 
     PathRepository.h
     PathRepository.cpp
+
+    PathAnalisys.h
+    PathAnalisys.cpp
 )
 
 qt_add_executable(CMove ${PROJECT_SOURCES})
