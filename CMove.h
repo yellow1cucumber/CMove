@@ -11,6 +11,7 @@
 #include "qstringlist.h"
 
 #include "PathRepository.h"
+#include "Validation/Validation.h"
 
 class CMove : public QMainWindow
 {
@@ -26,6 +27,8 @@ signals:
     void onSourcePathChanged(const QString& path);
     void onDestinationPathChanged(const QString& path);
 
+    void onReadyToBuildTreeView(const QString& path, const QString& filter);
+
 public slots:
     void OpenFileSourceDialog();
     void OpenFileDestinationDialog();
@@ -40,6 +43,8 @@ public slots:
 
 private:
     Ui::CMoveClass ui;
-
+    Validation validator{ this };
     PathRepository pathRepository{ this };
+
+    bool isReadyToBuildTreeView();
 };

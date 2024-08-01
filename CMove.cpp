@@ -40,6 +40,11 @@ QString CMove::GetDirByFileDialog(const QString& activePath)
     return dir;
 }
 
+bool CMove::isReadyToBuildTreeView()
+{
+    return false;
+}
+
 
 #pragma region Slots
 void CMove::OpenFileSourceDialog() {

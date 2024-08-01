@@ -30,6 +30,9 @@ set(PROJECT_SOURCES
 
     DirData/AnalisysResult.h
     DirData/AnalisysResult.cpp
+
+    Validation/Validation.h
+    Validation/Validation.cpp
 )
 
 qt_add_executable(CMove ${PROJECT_SOURCES})
