@@ -17,9 +17,13 @@ qt_standard_project_setup()
 
 set(PROJECT_SOURCES
     main.cpp
+
     CMove.ui
     CMove.h
     CMove.cpp
+
+    PathRepository.h
+    PathRepository.cpp
 )
 
 qt_add_executable(CMove ${PROJECT_SOURCES})
