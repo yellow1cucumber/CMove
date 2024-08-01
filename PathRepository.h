@@ -13,8 +13,8 @@ public:
 	void SetSourcePath(QString path) noexcept;
 	void SetDestinationPath(QString path) noexcept;
 
-	QString* GetSourcePath() const noexcept;
-	QString* GetDestinationPath() const noexcept;
+	QString GetSourcePath() const noexcept;
+	QString GetDestinationPath() const noexcept;
 
 signals:
 	void onSourcePathChanged(const QString& newPath);

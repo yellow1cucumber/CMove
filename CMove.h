@@ -17,11 +17,11 @@ public:
     CMove(QWidget *parent = nullptr);
     ~CMove();
 
-    QString GetDirByFileDialog();
+    QString GetDirByFileDialog(const QString& activePath);
 
 signals:
-    void onDestinationPathSelected(const QString& path);
-    void onSourcePathSelected(const QString& path);
+    void onSourcePathChanged(const QString& path);
+    void onDestinationPathChanged(const QString& path);
 
 public slots:
     void OpenFileSourceDialog();

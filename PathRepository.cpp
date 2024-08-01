@@ -21,12 +21,12 @@ void PathRepository::SetDestinationPath(QString path) noexcept
 	emit this->onDestinationPathChanged(this->DestinationPath);
 }
 
-QString* PathRepository::GetSourcePath() const noexcept
+QString PathRepository::GetSourcePath() const noexcept
 {
-	return nullptr;
+	return this->SourcePath;
 }
 
-QString* PathRepository::GetDestinationPath() const noexcept
+QString PathRepository::GetDestinationPath() const noexcept
 {
-	return nullptr;
+	return this->SourcePath;
 }
