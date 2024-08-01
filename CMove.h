@@ -27,8 +27,11 @@ public slots:
     void OpenFileSourceDialog();
     void OpenFileDestinationDialog();
 
-    void SetSourcePath(const QString& path);
-    void SetDestinationPath(const QString& path);
+    void SaveSourcePath(const QString& path);
+    void SaveDestinationPath(const QString& path);
+
+    void SetSourcePathLineEdit(const QString& path);
+    void SetDestinationPathLineEdit(const QString& path);
 
 private:
     Ui::CMoveClass ui;
