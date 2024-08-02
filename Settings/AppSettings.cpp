@@ -2,7 +2,7 @@
 
 AppSettings::AppSettings(QObject* parent)
 	: QObject(parent),
-		params{ QSettings::IniFormat, QSettings::UserScope, "", "" }
+		params{ ".ini", QSettings::IniFormat }
 {
 }
 

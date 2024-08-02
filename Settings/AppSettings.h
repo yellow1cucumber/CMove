@@ -11,5 +11,5 @@ public:
 	AppSettings(QObject *parent);
 	~AppSettings();
 
-	const QSettings params;
+	QSettings params;
 };

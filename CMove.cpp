@@ -5,6 +5,8 @@ CMove::CMove(QWidget *parent)
 {
     this->ui.setupUi(this);
 
+    this->SetDefaultValues();
+
     this->connect(this->ui.SelectSourcePathButton, &QPushButton::clicked, 
                   this, &CMove::OpenFileSourceDialog);
     this->connect(this->ui.SelectDestinationPathButton, &QPushButton::clicked,
@@ -66,7 +68,11 @@ QStringList CMove::prepareFilter(const QString& filterInput)
 }
 
 void CMove::SetDefaultValues() {
-
+    this->settings.params.beginGroup("Default");
+    const auto filterExpressionDefault =
+        this->settings.params.value("FilterExpressionDefault", QString{""}).toString();
+    this->ui.RegexLineEdit->setText(filterExpressionDefault);
+    this->validator.SetFilterExpression(filterExpressionDefault);
 }
 
 
