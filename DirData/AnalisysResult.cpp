@@ -14,9 +14,6 @@ void AnalisysResult::Reset()
 	this->foundFilesCount = 0;
 	this->foundSubDirsCount = 0;
 	this->filesByRegexCount = 0;
-
-	this->FilesByRegex.clear();
-	this->Subdirs.clear();
 }
 
 void AnalisysResult::SetFoundFilesCount(quint64 count) noexcept

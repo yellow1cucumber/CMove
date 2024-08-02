@@ -36,6 +36,10 @@ set(PROJECT_SOURCES
 
     Settings/AppSettings.h
     Settings/AppSettings.cpp
+
+    Processing/FileProcess.h
+    Processing/FileProcess.cpp
+    Processing/TransactionParametres.h
 )
 
 qt_add_executable(CMove ${PROJECT_SOURCES})

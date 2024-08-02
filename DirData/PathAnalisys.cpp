@@ -23,8 +23,8 @@ void PathAnalisys::FindAllSubDirectories(const QString& path, AnalisysResult& re
 	QDirIterator iter{ dir, QDirIterator::Subdirectories };
 	quint64 count{ 0 };
 	while (iter.hasNext()) {
-		res.Subdirs.append(iter.next());
 		++count;
+		iter.next();
 	};
 	res.SetFoundSubdirsCount(count - 2);
 }
@@ -36,9 +36,8 @@ void PathAnalisys::FindAllFiles(const QString& path, AnalisysResult& res)
 	quint64 count{ 0 };
 	while (iter.hasNext())
 	{
-		QString iterPath = iter.path();
-		QString filePath = iter.next();
 		++count;
+		iter.next();
 	}
 	res.SetFoundFilesCount(count);
 }
@@ -52,7 +51,6 @@ void PathAnalisys::FindAllFilesByRegex(const QString& path, const QString& subst
 	{
 		auto file = iter.next();
 		if (file.contains(substring)) {
-			res.FilesByRegex.append(file);
 			++count;
 		}
 	}

@@ -1,6 +1,9 @@
 #pragma once
 
 #include <QObject>
+#include "qfile.h"
+#include <qfileinfo.h>
+
 
 class AnalisysResult : public QObject
 {
@@ -10,9 +13,6 @@ public:
 	AnalisysResult(QObject *parent);
 	~AnalisysResult();
 
-	QStringList FilesByRegex{ 0 };
-	QStringList Subdirs{ 0 };
-	
 	void Reset();
 
 	void SetFoundFilesCount(quint64 count) noexcept;
