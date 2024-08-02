@@ -12,6 +12,8 @@ public:
 
 	QStringList FilesByRegex{ 0 };
 	QStringList Subdirs{ 0 };
+	
+	void Reset();
 
 	void SetFoundFilesCount(quint64 count) noexcept;
 	void SetFoundSubdirsCount(quint64 count) noexcept;

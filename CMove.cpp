@@ -32,6 +32,13 @@ CMove::CMove(QWidget *parent)
 
     this->connect(this, &CMove::onReadyToBuildTreeView,
                   this, &CMove::SetTreeView);
+    this->connect(this, &CMove::onReadyToAnalise,
+                  this, &CMove::AnalizeSource);
+
+    this->connect(&this->pathRepository, &PathRepository::onSourcePathChanged,
+                  this, &CMove::TryToBuildTreeView);
+    this->connect(&this->validator, &Validation::onFilterExpressionChanged,
+                  this, &CMove::TryToBuildTreeView);
 }
 
 CMove::~CMove()
@@ -75,6 +82,18 @@ void CMove::SetDefaultValues() {
     this->validator.SetFilterExpression(filterExpressionDefault);
 }
 
+void CMove::AnalizeSource(const QString& path, const QString& filterExpression)
+{
+    AnalisysResult* res = &this->analisys.Analize(path, filterExpression);
+    QString totalFiles = QString::number(res->GetFoundFilesCount());
+    QString filesByFilterExpression = QString::number(res->GetFilesByRegexCount());
+    QString subdirs = QString::number(res->GetFoundSubdirsCount());
+
+    this->ui.FilesTotalLineEdit->setText(totalFiles);
+    this->ui.FilesByFilterLineEdit->setText(filesByFilterExpression);
+    this->ui.SubdirsLineEdit->setText(subdirs);
+}
+
 
 #pragma region Slots
 void CMove::OpenFileSourceDialog() {
@@ -98,10 +117,6 @@ void CMove::OpenFileDestinationDialog() {
 
 void CMove::SaveSourcePath(const QString& path) {
     this->pathRepository.SetSourcePath(path);
-    if (isReadyToBuildTreeView()) {
-        emit onReadyToBuildTreeView(this->pathRepository.GetSourcePath(),
-                                    this->validator.GetFilterExpression());
-    }
 }
 void CMove::SaveDestinationPath(const QString& path) {
     this->pathRepository.SetDestinationPath(path);
@@ -109,10 +124,6 @@ void CMove::SaveDestinationPath(const QString& path) {
 
 void CMove::SetSourcePathLineEdit(const QString& path) {
     this->ui.SourcePathLineEdit->setText(path);
-    if (isReadyToBuildTreeView()) {
-        emit onReadyToBuildTreeView(this->pathRepository.GetSourcePath(),
-                                    this->validator.GetFilterExpression());
-    }
 }
 void CMove::SetDestinationPathLineEdit(const QString& path) {
     this->ui.DestinationPathLineEdit->setText(path);
@@ -122,20 +133,29 @@ void CMove::SetFilterExpression()
 {
     auto filterExpression = this->ui.RegexLineEdit->text();
     this->validator.SetFilterExpression(filterExpression);
+}
+
+void CMove::TryToBuildTreeView()
+{
     if (isReadyToBuildTreeView()) {
-        emit onReadyToBuildTreeView(this->pathRepository.GetSourcePath(), 
+        emit onReadyToBuildTreeView(this->pathRepository.GetSourcePath(),
                                     this->validator.GetFilterExpression());
+        emit onReadyToAnalise(this->pathRepository.GetSourcePath(),
+                              this->validator.GetFilterExpression());
     }
 }
 
 void CMove::SetTreeView(const QString& path, const QString& filterInput) {
     auto model = new QFileSystemModel(this);
     model->setRootPath(path + "/");
-    model->setFilter(QDir::Files | QDir::NoDotAndDotDot);
+    model->setFilter(QDir::Files | QDir::NoDotAndDotDot | QDir::AllDirs);
     auto filter = this->prepareFilter(filterInput);
     model->setNameFilters(filter);
     model->setNameFilterDisables(false);
     this->ui.FilesTreeView->setModel(model);
-    this->ui.FilesTreeView->expandAll();
+    this->ui.FilesTreeView->setRootIndex(model->index(path + "/"));
+    this->connect(model, &QFileSystemModel::directoryLoaded,
+                  this->ui.FilesTreeView, &QTreeView::expandAll);
 }
+
 #pragma endregion

@@ -13,6 +13,8 @@
 #include "PathRepository.h"
 #include "Validation/Validation.h"
 #include "Settings/AppSettings.h"
+#include "DirData/PathAnalisys.h"
+#include "DirData/AnalisysResult.h"
 
 
 class CMove : public QMainWindow
@@ -30,6 +32,7 @@ signals:
     void onDestinationPathChanged(const QString& path);
 
     void onReadyToBuildTreeView(const QString& sourcePath, const QString& filter);
+    void onReadyToAnalise(const QString& sourcePath, const QString& filter);
 
 public slots:
     void OpenFileSourceDialog();
@@ -42,11 +45,15 @@ public slots:
     void SetDestinationPathLineEdit(const QString& path);
 
     void SetFilterExpression();
+    
+    void TryToBuildTreeView();
 
     void SetTreeView(const QString& path, const QString& filterInput);
+    void AnalizeSource(const QString& path, const QString& filterExpression);
 
 private:
     Ui::CMoveClass ui;
+    PathAnalisys analisys{ this };
     Validation validator{ this };
     PathRepository pathRepository{ this };
     AppSettings settings{ this };

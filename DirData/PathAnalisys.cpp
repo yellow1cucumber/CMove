@@ -7,49 +7,54 @@ PathAnalisys::PathAnalisys(QObject *parent)
 PathAnalisys::~PathAnalisys()
 {}
 
-void PathAnalisys::Analize(const QString & sourcePath, const QString & substring)
+AnalisysResult& PathAnalisys::Analize(const QString & sourcePath, const QString & substring)
 {
-	this->FindAllSubDirectories(sourcePath);
-	this->FindAllFiles(sourcePath);
-	this->FindAllFilesByRegex(sourcePath, substring);
+	this->Result.Reset();
+	this->FindAllSubDirectories(sourcePath, this->Result);
+	this->FindAllFiles(sourcePath, this->Result);
+	this->FindAllFilesByRegex(sourcePath, substring, this->Result);
+
+	return this->Result;
 }
 
-void PathAnalisys::FindAllSubDirectories(const QString & path)
+void PathAnalisys::FindAllSubDirectories(const QString& path, AnalisysResult& res)
 {
 	QDir dir{ path };
 	QDirIterator iter{ dir, QDirIterator::Subdirectories };
 	quint64 count{ 0 };
 	while (iter.hasNext()) {
-		this->result.Subdirs.append(iter.next());
-		count++;
+		res.Subdirs.append(iter.next());
+		++count;
 	};
-	this->result.SetFoundSubdirsCount(count);
+	res.SetFoundSubdirsCount(count - 2);
 }
 
-void PathAnalisys::FindAllFiles(const QString& path)
+void PathAnalisys::FindAllFiles(const QString& path, AnalisysResult& res)
 {
-	QDir dir{ path };
-	QDirIterator iter{ dir.absolutePath(), QDir::Files, QDirIterator::Subdirectories };
+	QDir dir{ path + "/" };
+	QDirIterator iter{ dir.path(), QDir::Files, QDirIterator::Subdirectories };
 	quint64 count{ 0 };
 	while (iter.hasNext())
 	{
-		count++;
+		QString iterPath = iter.path();
+		QString filePath = iter.next();
+		++count;
 	}
-	this->result.SetFoundFilesCount(count);
+	res.SetFoundFilesCount(count);
 }
 
-void PathAnalisys::FindAllFilesByRegex(const QString& path, const QString& substring)
+void PathAnalisys::FindAllFilesByRegex(const QString& path, const QString& substring, AnalisysResult& res)
 {
-	QDir dir{ path };
-	QDirIterator iter{ dir.absolutePath(), QDir::Files, QDirIterator::Subdirectories };
+	QDir dir{ path + "/" };
+	QDirIterator iter{ dir.path(), QDir::Files, QDirIterator::Subdirectories };
 	quint64 count{ 0 };
 	while (iter.hasNext())
 	{
 		auto file = iter.next();
 		if (file.contains(substring)) {
-			this->result.FilesByRegex.append(file);
-			count++;
+			res.FilesByRegex.append(file);
+			++count;
 		}
 	}
-	this->result.SetFilesByRegexCount(count);
+	res.SetFilesByRegexCount(count);
 }

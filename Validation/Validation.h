@@ -19,6 +19,9 @@ public:
 	void SetFilterExpression(QString filterExpression) noexcept;
 	QString GetFilterExpression() const noexcept;
 
+signals:
+	void onFilterExpressionChanged(const QString& filterExpression);
+
 private:
 	QString filterExpression{ "" };
 };

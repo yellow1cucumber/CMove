@@ -29,6 +29,7 @@ bool Validation::IsReadyToProcess(const QString& sourcePath,
 void Validation::SetFilterExpression(QString filterExpression) noexcept
 {
 	this->filterExpression = filterExpression;
+	emit this->onFilterExpressionChanged(this->filterExpression);
 }
 
 QString Validation::GetFilterExpression() const noexcept
