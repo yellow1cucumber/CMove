@@ -18,7 +18,6 @@ public:
 
 public slots:
 	bool StartTransaction(TransactionParametres& params);
-	bool CopyRecursively(const QString& sourceFolder, const QString& destFolder, const bool rewrite);
 
 signals:
 	void onOperationComplete();
