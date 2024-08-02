@@ -136,5 +136,6 @@ void CMove::SetTreeView(const QString& path, const QString& filterInput) {
     model->setNameFilters(filter);
     model->setNameFilterDisables(false);
     this->ui.FilesTreeView->setModel(model);
+    this->ui.FilesTreeView->expandAll();
 }
 #pragma endregion
