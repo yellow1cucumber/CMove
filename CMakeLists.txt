@@ -33,6 +33,9 @@ set(PROJECT_SOURCES
 
     Validation/Validation.h
     Validation/Validation.cpp
+
+    Settings/AppSettings.h
+    Settings/AppSettings.cpp
 )
 
 qt_add_executable(CMove ${PROJECT_SOURCES})

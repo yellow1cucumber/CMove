@@ -65,6 +65,10 @@ QStringList CMove::prepareFilter(const QString& filterInput)
     return filter;
 }
 
+void CMove::SetDefaultValues() {
+
+}
+
 
 #pragma region Slots
 void CMove::OpenFileSourceDialog() {

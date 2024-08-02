@@ -12,6 +12,8 @@
 
 #include "PathRepository.h"
 #include "Validation/Validation.h"
+#include "Settings/AppSettings.h"
+
 
 class CMove : public QMainWindow
 {
@@ -47,6 +49,9 @@ private:
     Ui::CMoveClass ui;
     Validation validator{ this };
     PathRepository pathRepository{ this };
+    AppSettings settings{ this };
+
+    void SetDefaultValues();
 
     bool isReadyToBuildTreeView();
     QStringList prepareFilter(const QString& filterInput);
