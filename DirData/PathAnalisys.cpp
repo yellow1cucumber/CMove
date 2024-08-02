@@ -7,6 +7,13 @@ PathAnalisys::PathAnalisys(QObject *parent)
 PathAnalisys::~PathAnalisys()
 {}
 
+void PathAnalisys::Analize(const QString & sourcePath, const QString & substring)
+{
+	this->FindAllSubDirectories(sourcePath);
+	this->FindAllFiles(sourcePath);
+	this->FindAllFilesByRegex(sourcePath, substring);
+}
+
 void PathAnalisys::FindAllSubDirectories(const QString & path)
 {
 	QDir dir{ path };
