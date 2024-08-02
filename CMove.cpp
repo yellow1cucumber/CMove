@@ -39,6 +39,11 @@ CMove::CMove(QWidget *parent)
                   this, &CMove::TryToBuildTreeView);
     this->connect(&this->validator, &Validation::onFilterExpressionChanged,
                   this, &CMove::TryToBuildTreeView);
+
+    this->connect(this->ui.StartButton, &QPushButton::clicked,
+                  this, &CMove::TryToStart);
+    this->connect(this, &CMove::onReadyToProcess,
+                  &this->processor, &FileProcess::StartTransaction);
 }
 
 CMove::~CMove()
@@ -80,18 +85,6 @@ void CMove::SetDefaultValues() {
         this->settings.params.value("FilterExpressionDefault", QString{""}).toString();
     this->ui.RegexLineEdit->setText(filterExpressionDefault);
     this->validator.SetFilterExpression(filterExpressionDefault);
-}
-
-void CMove::AnalizeSource(const QString& path, const QString& filterExpression)
-{
-    AnalisysResult* res = &this->analisys.Analize(path, filterExpression);
-    QString totalFiles = QString::number(res->GetFoundFilesCount());
-    QString filesByFilterExpression = QString::number(res->GetFilesByRegexCount());
-    QString subdirs = QString::number(res->GetFoundSubdirsCount());
-
-    this->ui.FilesTotalLineEdit->setText(totalFiles);
-    this->ui.FilesByFilterLineEdit->setText(filesByFilterExpression);
-    this->ui.SubdirsLineEdit->setText(subdirs);
 }
 
 
@@ -156,6 +149,41 @@ void CMove::SetTreeView(const QString& path, const QString& filterInput) {
     this->ui.FilesTreeView->setRootIndex(model->index(path + "/"));
     this->connect(model, &QFileSystemModel::directoryLoaded,
                   this->ui.FilesTreeView, &QTreeView::expandAll);
+}
+void CMove::AnalizeSource(const QString& path, const QString& filterExpression)
+{
+    AnalisysResult* res = &this->analisys.Analize(path, filterExpression);
+    QString totalFiles = QString::number(res->GetFoundFilesCount());
+    QString filesByFilterExpression = QString::number(res->GetFilesByRegexCount());
+    QString subdirs = QString::number(res->GetFoundSubdirsCount());
+
+    this->ui.FilesTotalLineEdit->setText(totalFiles);
+    this->ui.FilesByFilterLineEdit->setText(filesByFilterExpression);
+    this->ui.SubdirsLineEdit->setText(subdirs);
+}
+
+void CMove::TryToStart()
+{
+    QString source{ this->pathRepository.GetSourcePath() };
+    QString dest{ this->pathRepository.GetDestinationPath() };
+
+    if (!validator.IsReadyToProcess(source, dest)) {
+        QMessageBox::warning(this, tr("Warning"), tr("Check source and destination paths"), QMessageBox::Ok);
+        return;
+    }
+
+    bool rewriteFlag = this->ui.ReplaceRadioButton->isChecked();
+    bool moveFlag = this->ui.MoveRadioButton->isChecked();
+
+    TransactionParametres params;
+    params.SourceFolder = source;
+    params.DestinationFolder = dest;
+    params.Rewrite = rewriteFlag;
+    moveFlag ?
+        params.Type = TransactionParametres::TransactionType::Move :
+        params.Type = TransactionParametres::TransactionType::Copy ;
+
+    emit onReadyToProcess(params);
 }
 
 #pragma endregion

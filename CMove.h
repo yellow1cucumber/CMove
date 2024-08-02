@@ -9,12 +9,16 @@
 #include "qtreeview.h"
 #include "qfilesystemmodel.h"
 #include "qstringlist.h"
+#include "qmessagebox.h"
+#include "qstringconverter.h"
 
 #include "PathRepository.h"
 #include "Validation/Validation.h"
 #include "Settings/AppSettings.h"
 #include "DirData/PathAnalisys.h"
 #include "DirData/AnalisysResult.h"
+#include "Processing/FileProcess.h"
+#include "Processing/TransactionParametres.h"
 
 
 class CMove : public QMainWindow
@@ -34,6 +38,8 @@ signals:
     void onReadyToBuildTreeView(const QString& sourcePath, const QString& filter);
     void onReadyToAnalise(const QString& sourcePath, const QString& filter);
 
+    void onReadyToProcess(const TransactionParametres&);
+
 public slots:
     void OpenFileSourceDialog();
     void OpenFileDestinationDialog();
@@ -51,12 +57,15 @@ public slots:
     void SetTreeView(const QString& path, const QString& filterInput);
     void AnalizeSource(const QString& path, const QString& filterExpression);
 
+    void TryToStart();
+
 private:
     Ui::CMoveClass ui;
     PathAnalisys analisys{ this };
     Validation validator{ this };
     PathRepository pathRepository{ this };
     AppSettings settings{ this };
+    FileProcess processor{ this };
 
     void SetDefaultValues();
 

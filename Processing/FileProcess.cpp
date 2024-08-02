@@ -9,7 +9,7 @@ FileProcess::~FileProcess()
 {
 }
 
-bool FileProcess::StartTransaction(TransactionParametres& params)
+bool FileProcess::StartTransaction(const TransactionParametres& params)
 {
     bool success = false;
     QDir sourceDir{ params.SourceFolder };
@@ -57,10 +57,11 @@ bool FileProcess::StartTransaction(TransactionParametres& params)
         QString srcName = params.SourceFolder + QDir::separator() + file;
         QString destName = params.DestinationFolder + QDir::separator() + file;
 
-        params.SourceFolder = srcName;
-        params.DestinationFolder = destName;
+        TransactionParametres next{ params };
+        next.SourceFolder = srcName;
+        next.DestinationFolder = destName;
 
-        success = this->StartTransaction(params);
+        success = this->StartTransaction(next);
         if (!success) {
             return false;
         }

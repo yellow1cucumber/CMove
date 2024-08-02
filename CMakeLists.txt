@@ -5,6 +5,9 @@ include(qt.cmake)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "/utf-8")
+set(CMAKE_C_FLAGS "/utf-8")
+
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR}
@@ -40,7 +43,11 @@ set(PROJECT_SOURCES
     Processing/FileProcess.h
     Processing/FileProcess.cpp
     Processing/TransactionParametres.h
+    Processing/TransactionParametres.cpp
 )
+
+add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
+add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
 qt_add_executable(CMove ${PROJECT_SOURCES})
 

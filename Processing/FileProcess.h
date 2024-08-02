@@ -17,7 +17,7 @@ public:
 	~FileProcess();
 
 public slots:
-	bool StartTransaction(TransactionParametres& params);
+	bool StartTransaction(const TransactionParametres& params);
 
 signals:
 	void onOperationComplete();
