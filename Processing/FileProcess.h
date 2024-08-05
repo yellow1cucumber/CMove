@@ -4,6 +4,7 @@
 #include "qfile.h"
 #include "qfileinfo.h"
 #include "qdir.h"
+#include <exception>
 
 #include "TransactionParametres.h"
 
@@ -24,6 +25,9 @@ signals:
 
 private:
 	const bool IsFileExists(const QString& file) const noexcept;
+	const bool IsTarget(const QString& file, const QString& filterExpression);
+	const bool MakeAction(const TransactionParametres::TransactionType type, const QString& src, const QString& dest, const bool rewrite);
 	const bool Copy(const QString& source, const QString& dest, const bool rewrite);
 	const bool Move(const QString& source, const QString& dest, const bool rewrite);
+	const bool IsDirContainsTargetFile(const QString& dir, const QStringList& targetFiles);
 };

@@ -28,5 +28,5 @@ QString PathRepository::GetSourcePath() const noexcept
 
 QString PathRepository::GetDestinationPath() const noexcept
 {
-	return this->SourcePath;
+	return this->DestinationPath;
 }

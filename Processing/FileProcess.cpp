@@ -29,33 +29,22 @@ bool FileProcess::StartTransaction(const TransactionParametres& params)
         QString srcName = params.SourceFolder + QDir::separator() + file;
         QString destName = params.DestinationFolder + QDir::separator() + file;
 
-        switch (params.Type)
-        {
-        case TransactionParametres::TransactionType::Copy:
-            success = this->Copy(srcName, destName, params.Rewrite);
-            if (!success) {
-                return false;
+        if (IsTarget(srcName, params.FilterExpression)) {
+            bool actionResult = this->MakeAction(params.Type, srcName, destName, params.Rewrite);
+            if (!actionResult) {
+                success = false;
             }
-            break;
-
-        case TransactionParametres::TransactionType::Move:
-            success = this->Move(srcName, destName, params.Rewrite);
-            if (!success) {
-                return false;
-            }
-            break;
-
-        default:
-            break;
         }
     }
-    files.clear();
 
+    QStringList dirs{ sourceDir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot) };
+    for (const QString& dir : dirs) {
+        QString srcName = params.SourceFolder + QDir::separator() + dir;
+        QString destName = params.DestinationFolder + QDir::separator() + dir;
 
-    files = sourceDir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
-    for (const QString& file : files) {
-        QString srcName = params.SourceFolder + QDir::separator() + file;
-        QString destName = params.DestinationFolder + QDir::separator() + file;
+        if (!IsDirContainsTargetFile(srcName, params.AnalisysResult->TargetFiles)) {
+            continue;
+        }
 
         TransactionParametres next{ params };
         next.SourceFolder = srcName;
@@ -79,6 +68,10 @@ const bool FileProcess::Copy(const QString& source, const QString& dest, const b
     if (IsFileExists(dest) && rewrite == false) {
         return true;
     }
+    if (IsFileExists(dest) && rewrite == true) {
+        QFile::remove(dest);
+        return QFile::copy(source, dest);
+    }
     return QFile::copy(source, dest);
 }
 
@@ -87,6 +80,47 @@ const bool FileProcess::Move(const QString& source, const QString& dest, const b
     if (IsFileExists(dest) && rewrite == false) {
         return true;
     }
+    if (IsFileExists(dest) && rewrite == true) {
+        QFile::remove(dest);
+        QFile file{ source };
+        return file.rename(dest);
+    }
     QFile file{ source };
     return file.rename(dest);
+}
+
+const bool FileProcess::IsDirContainsTargetFile(const QString& dirPath, const QStringList& targetFiles)
+{
+    QDir dir{ dirPath };
+    QStringList dirFiles{ dir.entryList(QDir::Files) };
+    for (const auto& file : dirFiles) {
+        if (targetFiles.contains(file)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+const bool FileProcess::IsTarget(const QString& file, const QString& filterExpression)
+{
+    return file.contains(filterExpression);
+}
+
+const bool FileProcess::MakeAction(const TransactionParametres::TransactionType type, const QString& src, const QString& dest, const bool rewrite)
+{
+    bool successFlag{ false };
+    switch (type)
+    {
+    case TransactionParametres::TransactionType::Copy:
+        successFlag = this->Copy(src, dest, rewrite);
+        break;
+
+    case TransactionParametres::TransactionType::Move:
+        successFlag = this->Move(src, dest, rewrite);
+        break;
+
+    default:
+        throw new std::exception("Uknown Operation");
+    }
+    return successFlag;
 }

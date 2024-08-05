@@ -1,7 +1,7 @@
 #pragma once
 
 #include "qobject.h"
-
+#include "../DirData/AnalisysResult.h"
 
 class TransactionParametres : QObject
 {
@@ -19,8 +19,10 @@ public:
 		Move
 	};
 
+	AnalisysResult* AnalisysResult{ nullptr };
 	bool Rewrite{ false };
 	QString SourceFolder{ "" };
 	QString DestinationFolder{ "" };
+	QString FilterExpression{ "" };
 	TransactionParametres::TransactionType Type{ TransactionParametres::TransactionType::Move };
 };

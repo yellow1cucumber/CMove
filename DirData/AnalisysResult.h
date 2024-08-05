@@ -23,6 +23,8 @@ public:
 	quint64 GetFoundSubdirsCount() const noexcept;
 	quint64 GetFilesByRegexCount() const noexcept;
 
+	QStringList TargetFiles;
+
 private:
 	quint64 foundFilesCount{ 0 };
 	quint64 foundSubDirsCount{ 0 };

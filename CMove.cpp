@@ -172,13 +172,17 @@ void CMove::TryToStart()
         return;
     }
 
+    QString filterExpression{ this->validator.GetFilterExpression() };
     bool rewriteFlag = this->ui.ReplaceRadioButton->isChecked();
     bool moveFlag = this->ui.MoveRadioButton->isChecked();
+
 
     TransactionParametres params;
     params.SourceFolder = source;
     params.DestinationFolder = dest;
+    params.FilterExpression = filterExpression;
     params.Rewrite = rewriteFlag;
+    params.AnalisysResult = &this->analisys.Result;
     moveFlag ?
         params.Type = TransactionParametres::TransactionType::Move :
         params.Type = TransactionParametres::TransactionType::Copy ;

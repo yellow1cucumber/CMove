@@ -19,14 +19,15 @@ AnalisysResult& PathAnalisys::Analize(const QString & sourcePath, const QString 
 
 void PathAnalisys::FindAllSubDirectories(const QString& path, AnalisysResult& res)
 {
-	QDir dir{ path };
-	QDirIterator iter{ dir, QDirIterator::Subdirectories };
+	QDirIterator iter{ path, QDir::NoDotAndDotDot | QDir::Dirs, QDirIterator::Subdirectories };
 	quint64 count{ 0 };
+	QStringList subdirs;
 	while (iter.hasNext()) {
+		QString path{ iter.next() };
 		++count;
-		iter.next();
+		subdirs.append(path);
 	};
-	res.SetFoundSubdirsCount(count - 2);
+	res.SetFoundSubdirsCount(count);
 }
 
 void PathAnalisys::FindAllFiles(const QString& path, AnalisysResult& res)
@@ -36,8 +37,9 @@ void PathAnalisys::FindAllFiles(const QString& path, AnalisysResult& res)
 	quint64 count{ 0 };
 	while (iter.hasNext())
 	{
-		++count;
-		iter.next();
+		if (iter.next() != "." || iter.next() != ".") {
+			++count;
+		}
 	}
 	res.SetFoundFilesCount(count);
 }
@@ -51,6 +53,8 @@ void PathAnalisys::FindAllFilesByRegex(const QString& path, const QString& subst
 	{
 		auto file = iter.next();
 		if (file.contains(substring)) {
+			QFileInfo fileInfo{ file };
+			res.TargetFiles.append(fileInfo.fileName());
 			++count;
 		}
 	}
