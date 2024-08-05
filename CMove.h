@@ -60,6 +60,8 @@ public slots:
 
     void LogAction(const QString& message);
 
+    void onTaskComplete();
+
     void TryToStart();
 
 private:

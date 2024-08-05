@@ -3,6 +3,7 @@
 #include <QObject>
 #include "qfile.h"
 #include <qfileinfo.h>
+#include "qstringconverter.h"
 
 
 class AnalisysResult : public QObject
@@ -24,6 +25,8 @@ public:
 	quint64 GetFilesByRegexCount() const noexcept;
 
 	QStringList TargetFiles;
+
+	const QString ToString() const;
 
 private:
 	quint64 foundFilesCount{ 0 };

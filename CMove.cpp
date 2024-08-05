@@ -47,6 +47,9 @@ CMove::CMove(QWidget *parent)
 
     this->connect(&this->logger, &Logger::onNewMessage,
                   this, &CMove::LogAction);
+
+    this->connect(&this->processor, &FileProcess::onOperationComplete,
+                   this, &CMove::onTaskComplete);
 }
 
 CMove::~CMove()
@@ -163,12 +166,21 @@ void CMove::AnalizeSource(const QString& path, const QString& filterExpression)
     this->ui.FilesTotalLineEdit->setText(totalFiles);
     this->ui.FilesByFilterLineEdit->setText(filesByFilterExpression);
     this->ui.SubdirsLineEdit->setText(subdirs);
+
+    auto resultLog{ res->ToString() };
+    this->LogAction(resultLog);
 }
 
 void CMove::LogAction(const QString& message)
 {
     QString text{ this->ui.ActionLogTextEdit->toPlainText() };
-    this->ui.ActionLogTextEdit->setText(text + message);
+    this->ui.ActionLogTextEdit->setText(text + "\n" + message);
+}
+
+void CMove::onTaskComplete()
+{
+    auto toUtf16 = QStringDecoder(QStringDecoder::Utf8);
+    this->LogAction(toUtf16("---ÎÏÅÐÀÖÈß ÇÀÂÅÐØÅÍÀ---"));
 }
 
 void CMove::TryToStart()
@@ -196,6 +208,7 @@ void CMove::TryToStart()
         params.Type = TransactionParametres::TransactionType::Move :
         params.Type = TransactionParametres::TransactionType::Copy ;
 
+    this->LogAction(params.ToString());
     emit onReadyToProcess(params);
 }
 

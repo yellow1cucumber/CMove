@@ -32,6 +32,7 @@ bool FileProcess::StartTransaction(const TransactionParametres& params)
         if (IsTarget(srcName, params.FilterExpression)) {
             bool actionResult = this->MakeAction(params.Type, srcName, destName, params.Rewrite);
             if (!actionResult) {
+                emit this->onOperationComplete();
                 success = false;
             }
         }
@@ -57,6 +58,7 @@ bool FileProcess::StartTransaction(const TransactionParametres& params)
     }
     return true;
 }
+
 
 const bool FileProcess::IsFileExists(const QString& file) const noexcept
 {

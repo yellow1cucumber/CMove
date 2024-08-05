@@ -19,6 +19,8 @@ public:
 		Move
 	};
 
+	const QString ToString() const;
+
 	AnalisysResult* AnalisysResult{ nullptr };
 	bool Rewrite{ false };
 	QString SourceFolder{ "" };
