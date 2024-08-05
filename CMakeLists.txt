@@ -44,6 +44,9 @@ set(PROJECT_SOURCES
     Processing/FileProcess.cpp
     Processing/TransactionParametres.h
     Processing/TransactionParametres.cpp
+
+    Logging/Logger.h
+    Logging/Logger.cpp
 )
 
 add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")

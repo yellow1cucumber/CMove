@@ -44,6 +44,9 @@ CMove::CMove(QWidget *parent)
                   this, &CMove::TryToStart);
     this->connect(this, &CMove::onReadyToProcess,
                   &this->processor, &FileProcess::StartTransaction);
+
+    this->connect(&this->logger, &Logger::onNewMessage,
+                  this, &CMove::LogAction);
 }
 
 CMove::~CMove()
@@ -160,6 +163,12 @@ void CMove::AnalizeSource(const QString& path, const QString& filterExpression)
     this->ui.FilesTotalLineEdit->setText(totalFiles);
     this->ui.FilesByFilterLineEdit->setText(filesByFilterExpression);
     this->ui.SubdirsLineEdit->setText(subdirs);
+}
+
+void CMove::LogAction(const QString& message)
+{
+    QString text{ this->ui.ActionLogTextEdit->toPlainText() };
+    this->ui.ActionLogTextEdit->setText(text + message);
 }
 
 void CMove::TryToStart()

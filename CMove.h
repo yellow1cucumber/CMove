@@ -19,6 +19,7 @@
 #include "DirData/AnalisysResult.h"
 #include "Processing/FileProcess.h"
 #include "Processing/TransactionParametres.h"
+#include "Logging/Logger.h"
 
 
 class CMove : public QMainWindow
@@ -57,6 +58,8 @@ public slots:
     void SetTreeView(const QString& path, const QString& filterInput);
     void AnalizeSource(const QString& path, const QString& filterExpression);
 
+    void LogAction(const QString& message);
+
     void TryToStart();
 
 private:
@@ -66,6 +69,8 @@ private:
     PathRepository pathRepository{ this };
     AppSettings settings{ this };
     FileProcess processor{ this };
+    Logger logger{ this };
+
 
     void SetDefaultValues();
 
